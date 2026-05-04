@@ -19,8 +19,8 @@ fn coords(input: &str) -> Result<Coords, ()> {
         input
     };
     let (x, y) = input.split_once(',').or(input.split_once(' ')).ok_or(())?;
-    let x = x.trim().parse::<i32>().unwrap();
-    let y = y.trim().parse::<i32>().unwrap();
+    let x = x.trim().parse::<i32>().map_err(|_| ())?;
+    let y = y.trim().parse::<i32>().map_err(|_| ())?;
     Ok(Coords((x, y)))
 }
 
@@ -103,14 +103,19 @@ fn print_fire_mission(state: &State, position: &str, mission: &str) -> Result<()
         "OUT OF RANGE".to_string()
     };
     println!(
-        "\t\"{}\": distance: {}, bearing: {}, mils: {} (quadratic), {} (LUT linear), {} (LUT lagrange), charge: {}",
+        "\t{} - distance: {}, bearing: {}, mils: {} (quadratic), {} (LUT linear), {} (LUT lagrange), charge: {}",
         mission, dist, bearing, mils_quad_s, mils_lut_s, mils_lut2_s, charge.unwrap()
     );
     Ok(())
 }
 
 fn new(state: &mut State, input: &str) -> Result<(), ()> {
-    let (name, c) = input.split_once(':').ok_or(())?;
+    let (input, delim) = if input.starts_with('"') {
+        (&input[1..], '"')
+    } else {
+        (input, ' ')
+    };
+    let (name, c) = input.split_once(delim).ok_or(())?;
     let name = name.trim().to_string();
     let name = if let Ok(n) = quotes(&name).map(|p| p.1.to_string()) {
         n
@@ -136,7 +141,12 @@ fn delete(state: &mut State, input: &str) -> Result<(), ()> {
 }
 
 fn edit(state: &mut State, input: &str) -> Result<(), ()> {
-    let (name, c) = input.split_once(':').ok_or(())?;
+    let (input, delim) = if input.starts_with('"') {
+        (&input[1..], '"')
+    } else {
+        (input, ' ')
+    };
+    let (name, c) = input.split_once(delim).ok_or(())?;
     let name = name.trim();
     if !state.fire_missions.contains_key(name) {
         return Err(());
@@ -153,7 +163,12 @@ fn edit(state: &mut State, input: &str) -> Result<(), ()> {
 }
 
 fn add(state: &mut State, input: &str) -> Result<(), ()> {
-    let (name, c) = input.split_once(':').ok_or(())?;
+    let (input, delim) = if input.starts_with('"') {
+        (&input[1..], '"')
+    } else {
+        (input, ' ')
+    };
+    let (name, c) = input.split_once(delim).ok_or(())?;
     let name = name.trim();
     let name = if let Ok(n) = quotes(name).map(|p| p.1) {
         n
@@ -448,7 +463,7 @@ fn session() -> Result<bool, ()> {
         match cmd.to_lowercase().as_str() {
             "new" | "n" => {
                 if let Err(_) = new(&mut state, i) {
-                    eprintln!("Invalid input for new fire mission. Format: n[ew] <name>: <coords>");
+                    eprintln!("Invalid input for new fire mission. Format: n[ew] <name> <coords>");
                 }
             }
             "delete" | "d" => {
@@ -459,13 +474,13 @@ fn session() -> Result<bool, ()> {
             "edit" | "e" => {
                 if let Err(_) = edit(&mut state, i) {
                     eprintln!(
-                        "Invalid input for edit fire mission. Format: e[dit] <name>: <coords>"
+                        "Invalid input for edit fire mission. Format: e[dit] <name> <coords>"
                     );
                 }
             }
             "add" | "a" => {
                 if let Err(_) = add(&mut state, i) {
-                    eprintln!("Invalid input for add fire mission. Format: a[dd] <name>: <coords>");
+                    eprintln!("Invalid input for add fire mission. Format: a[dd] <name> <coords>");
                 }
             }
             "list" | "l" => list(&state),
@@ -474,7 +489,7 @@ fn session() -> Result<bool, ()> {
                 return Ok(true);
             }
             "quit" | "q" => return Ok(false),
-            _ => eprintln!("Unknown command: {}", cmd),
+            _ => eprintln!("Unknown command: {}\nValid commands: new, delete, edit, add, list, reset, quit", cmd),
         };
         input.clear();
     }
