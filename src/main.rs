@@ -83,28 +83,31 @@ fn print_fire_mission(state: &State, position: &str, mission: &str) -> Result<()
     let c = state.fire_missions.get(mission).ok_or(())?.coords;
     let dist = distance(*p, c);
     let bearing = bearing(*p, c);
-    let charge = Charge::for_distance(dist);
-    let mils_quad = charge.map(|c| c.quadratic().solve(dist.0 as f64));
-    let mils_lut = charge.map(|c| c.lut().mils_linear(dist).unwrap_or(0.0));
-    let mils_lut2 = charge.map(|c| c.lut().mils_quadratic(dist).unwrap_or(0.0));
-    let mils_quad_s = if let Some(m) = mils_quad {
+    let charge = Charge::for_distance(dist).unwrap_or(Charge::Five);
+    let mils_quad = charge.quadratic().solve(dist.0 as f64);
+    let mils_quad_s = format!("{:06.1}mrad", mils_quad);
+    let mils_lut_linear = charge.lut().mils_linear(dist);
+    let mils_lut_quadratic = charge.lut().mils_quadratic(dist);
+    let time_of_flight = charge.lut().time_of_flight(dist);
+
+    let mils_lut_s = if let Some(m) = mils_lut_linear {
         format!("{:06.1}mrad", m)
     } else {
         "OUT OF RANGE".to_string()
     };
-    let mils_lut_s = if let Some(m) = mils_lut {
+    let mils_lut2_s = if let Some(m) = mils_lut_quadratic {
         format!("{:06.1}mrad", m)
     } else {
         "OUT OF RANGE".to_string()
     };
-    let mils_lut2_s = if let Some(m) = mils_lut2 {
-        format!("{:06.1}mrad", m)
+    let time_of_flight = if let Some(t) = time_of_flight {
+        format!("{:.1}s", t)
     } else {
         "OUT OF RANGE".to_string()
     };
     println!(
-        "\t{} - distance: {}, bearing: {}, mils: {} (quadratic), {} (LUT linear), {} (LUT lagrange), charge: {}",
-        mission, dist, bearing, mils_quad_s, mils_lut_s, mils_lut2_s, charge.unwrap()
+        "\t{} - distance: {}, bearing: {}, elevation: {} (quadratic), {} (LUT linear), {} (LUT lagrange), charge: {}, time of flight: {}",
+        mission, dist, bearing, mils_quad_s, mils_lut_s, mils_lut2_s, charge, time_of_flight
     );
     Ok(())
 }
@@ -229,97 +232,103 @@ impl Quadratic {
     }
 }
 
-static CHARGE_1_LUT: [(i32, i32); 12] = [
-    (950, 1245),
-    (1000, 1221),
-    (1050, 1197),
-    (1100, 1171),
-    (1150, 1149),
-    (1200, 1115),
-    (1250, 1084),
-    (1300, 1050),
-    (1350, 1011),
-    (1400, 965),
-    (1450, 907),
-    (1500, 800),
+struct ChargeInfo {
+    range: i32,
+    elevation: i32,
+    time_of_flight: f64,
+}
+
+static CHARGE_1_LUT: [ChargeInfo; 12] = [
+    ChargeInfo { range: 950, elevation: 1245, time_of_flight: 24.4 },
+    ChargeInfo { range: 1000, elevation: 1221, time_of_flight: 24.2 },
+    ChargeInfo { range: 1050, elevation: 1197, time_of_flight: 24.0 },
+    ChargeInfo { range: 1100, elevation: 1171, time_of_flight: 23.7 },
+    ChargeInfo { range: 1150, elevation: 1149, time_of_flight: 23.4 },
+    ChargeInfo { range: 1200, elevation: 1115, time_of_flight: 23.1 },
+    ChargeInfo { range: 1250, elevation: 1084, time_of_flight: 22.7 },
+    ChargeInfo { range: 1300, elevation: 1050, time_of_flight: 22.3 },
+    ChargeInfo { range: 1350, elevation: 1011, time_of_flight: 21.8 },
+    ChargeInfo { range: 1400, elevation: 965, time_of_flight: 21.2 },
+    ChargeInfo { range: 1450, elevation: 907, time_of_flight: 20.3 },
+    ChargeInfo { range: 1500, elevation: 800, time_of_flight: 18.6 },
 ];
 
-static CHARGE_2_LUT: [(i32, i32); 21] = [
-    (1500, 1270),
-    (1550, 1257),
-    (1600, 1243),
-    (1650, 1229),
-    (1700, 1214),
-    (1750, 1200),
-    (1800, 1185),
-    (1850, 1169),
-    (1900, 1153),
-    (1950, 1136),
-    (2000, 1119),
-    (2050, 1101),
-    (2100, 1082),
-    (2150, 1062),
-    (2200, 1041),
-    (2250, 1018),
-    (2300, 995),
-    (2350, 967),
-    (2400, 938),
-    (2450, 904),
-    (2500, 860),
+static CHARGE_2_LUT: [ChargeInfo; 21] = [
+    ChargeInfo { range: 1500, elevation: 1270, time_of_flight: 31.1 },
+    ChargeInfo { range: 1550, elevation: 1257, time_of_flight: 33.0 },
+    ChargeInfo { range: 1600, elevation: 1243, time_of_flight: 32.9 },
+    ChargeInfo { range: 1650, elevation: 1229, time_of_flight: 32.7 },
+    ChargeInfo { range: 1700, elevation: 1214, time_of_flight: 32.5 },
+    ChargeInfo { range: 1750, elevation: 1200, time_of_flight: 32.4 },
+    ChargeInfo { range: 1800, elevation: 1185, time_of_flight: 32.1 },
+    ChargeInfo { range: 1850, elevation: 1169, time_of_flight: 31.9 },
+    ChargeInfo { range: 1900, elevation: 1153, time_of_flight: 31.7 },
+    ChargeInfo { range: 1950, elevation: 1136, time_of_flight: 31.5 },
+    ChargeInfo { range: 2000, elevation: 1119, time_of_flight: 31.2 },
+    ChargeInfo { range: 2050, elevation: 1101, time_of_flight: 31.0 },
+    ChargeInfo { range: 2100, elevation: 1082, time_of_flight: 30.7 },
+    ChargeInfo { range: 2150, elevation: 1062, time_of_flight: 30.3 },
+    ChargeInfo { range: 2200, elevation: 1041, time_of_flight: 30.0 },
+    ChargeInfo { range: 2250, elevation: 1018, time_of_flight: 29.6 },
+    ChargeInfo { range: 2300, elevation: 995, time_of_flight: 29.2 },
+    ChargeInfo { range: 2350, elevation: 967, time_of_flight: 28.7 },
+    ChargeInfo { range: 2400, elevation: 938, time_of_flight: 28.1 },
+    ChargeInfo { range: 2450, elevation: 904, time_of_flight: 27.5 },
+    ChargeInfo { range: 2500, elevation: 860, time_of_flight: 26.5 },
 ];
 
-static CHARGE_4_LUT: [(i32, i32); 20] = [
-    (2600, 1271),
-    (2700, 1255),
-    (2800, 1240),
-    (2900, 1224),
-    (3000, 1207),
-    (3100, 1190),
-    (3200, 1172),
-    (3300, 1154),
-    (3400, 1135),
-    (3500, 1116),
-    (3600, 1095),
-    (3700, 1074),
-    (3800, 1052),
-    (3900, 1028),
-    (4000, 1003),
-    (4100, 976),
-    (4200, 946),
-    (4300, 912),
-    (4400, 874),
-    (4500, 828),
+static CHARGE_4_LUT: [ChargeInfo; 20] = [
+    ChargeInfo { range: 2600, elevation: 1271, time_of_flight: 47.2 },
+    ChargeInfo { range: 2700, elevation: 1255, time_of_flight: 47.0 },
+    ChargeInfo { range: 2800, elevation: 1240, time_of_flight: 46.7 },
+    ChargeInfo { range: 2900, elevation: 1224, time_of_flight: 46.5 },
+    ChargeInfo { range: 3000, elevation: 1207, time_of_flight: 46.2 },
+    ChargeInfo { range: 3100, elevation: 1190, time_of_flight: 45.9 },
+    ChargeInfo { range: 3200, elevation: 1172, time_of_flight: 45.6 },
+    ChargeInfo { range: 3300, elevation: 1154, time_of_flight: 45.2 },
+    ChargeInfo { range: 3400, elevation: 1135, time_of_flight: 44.9 },
+    ChargeInfo { range: 3500, elevation: 1116, time_of_flight: 44.5 },
+    ChargeInfo { range: 3600, elevation: 1095, time_of_flight: 44.0 },
+    ChargeInfo { range: 3700, elevation: 1074, time_of_flight: 43.6 },
+    ChargeInfo { range: 3800, elevation: 1052, time_of_flight: 43.1 },
+    ChargeInfo { range: 3900, elevation: 1028, time_of_flight: 42.5 },
+    ChargeInfo { range: 4000, elevation: 1003, time_of_flight: 41.9 },
+    ChargeInfo { range: 4100, elevation: 976, time_of_flight: 41.3 },
+    ChargeInfo { range: 4200, elevation: 946, time_of_flight: 40.5 },
+    ChargeInfo { range: 4300, elevation: 912, time_of_flight: 39.6 },
+    ChargeInfo { range: 4400, elevation: 874, time_of_flight: 38.5 },
+    ChargeInfo { range: 4500, elevation: 828, time_of_flight: 37.2 },
 ];
 
-static CHARGE_5_LUT: [(i32, i32); 24] = [
-    (3000, 1271),
-    (3100, 1258),
-    (3200, 1244),
-    (3300, 1230),
-    (3400, 1216),
-    (3500, 1202),
-    (3600, 1187),
-    (3700, 1172),
-    (3800, 1156),
-    (3900, 1140),
-    (4000, 1024),
-    (4100, 1107),
-    (4200, 1089),
-    (4300, 1071),
-    (4400, 1052),
-    (4500, 1032),
-    (4600, 1011),
-    (4700, 989),
-    (4800, 966),
-    (4900, 941),
-    (5000, 913),
-    (5100, 883),
-    (5200, 850),
-    (5300, 809),
+static CHARGE_5_LUT: [ChargeInfo; 24] = [
+    ChargeInfo { range: 3000, elevation: 1271, time_of_flight: 0.0 },
+    ChargeInfo { range: 3100, elevation: 1258, time_of_flight: 0.0 },
+    ChargeInfo { range: 3200, elevation: 1244, time_of_flight: 0.0 },
+    ChargeInfo { range: 3300, elevation: 1230, time_of_flight: 0.0 },
+    ChargeInfo { range: 3400, elevation: 1216, time_of_flight: 0.0 },
+    ChargeInfo { range: 3500, elevation: 1202, time_of_flight: 0.0 },
+    ChargeInfo { range: 3600, elevation: 1187, time_of_flight: 0.0 },
+    ChargeInfo { range: 3700, elevation: 1172, time_of_flight: 0.0 },
+    ChargeInfo { range: 3800, elevation: 1156, time_of_flight: 0.0 },
+    ChargeInfo { range: 3900, elevation: 1140, time_of_flight: 0.0 },
+    ChargeInfo { range: 4000, elevation: 1024, time_of_flight: 0.0 },
+    ChargeInfo { range: 4100, elevation: 1107, time_of_flight: 0.0 },
+    ChargeInfo { range: 4200, elevation: 1089, time_of_flight: 0.0 },
+    ChargeInfo { range: 4300, elevation: 1071, time_of_flight: 0.0 },
+    ChargeInfo { range: 4400, elevation: 1052, time_of_flight: 0.0 },
+    ChargeInfo { range: 4500, elevation: 1032, time_of_flight: 0.0 },
+    ChargeInfo { range: 4600, elevation: 1011, time_of_flight: 0.0 },
+    ChargeInfo { range: 4700, elevation: 989, time_of_flight: 0.0 },
+    ChargeInfo { range: 4800, elevation: 966, time_of_flight: 0.0 },
+    ChargeInfo { range: 4900, elevation: 941, time_of_flight: 0.0 },
+    ChargeInfo { range: 5000, elevation: 913, time_of_flight: 0.0 },
+    ChargeInfo { range: 5100, elevation: 883, time_of_flight: 0.0 },
+    ChargeInfo { range: 5200, elevation: 850, time_of_flight: 0.0 },
+    ChargeInfo { range: 5300, elevation: 809, time_of_flight: 0.0 },
 ];
 
 struct Lut {
-    points: &'static [(i32, i32)],
+    points: &'static [ChargeInfo],
     range_inc: i32,
 }
 
@@ -328,12 +337,12 @@ impl Lut {
         let rounded = (distance.0 / self.range_inc) * self.range_inc;
         let rem = distance.0 % self.range_inc;
         let next = rounded + self.range_inc;
-        let low = self.points.iter().find(|(d, _)| *d == rounded)?;
-        let high = self.points.iter().find(|(d, _)| *d == next)?;
-        let meters = high.0 - low.0;
-        let mils = low.1 - high.1;
+        let low = self.points.iter().find(|c| c.range == rounded)?;
+        let high = self.points.iter().find(|c| c.range == next)?;
+        let meters = high.range - low.range;
+        let mils = low.elevation - high.elevation;
         let mils_per_meter = mils as f64 / meters as f64;
-        Some(low.1 as f64 - (rem as f64 * mils_per_meter))
+        Some(low.elevation as f64 - (rem as f64 * mils_per_meter))
     }
 
     fn mils_quadratic(&self, distance: Distance) -> Option<f64> {
@@ -343,9 +352,9 @@ impl Lut {
         let next2 = rounded + self.range_inc * 2;
         let prev = rounded - self.range_inc;
         let third = if rem > self.range_inc / 2 { next2 } else { prev };
-        let a = self.points.iter().find(|(d, _)| *d == rounded)?;
-        let b = self.points.iter().find(|(d, _)| *d == next)?;
-        let c = self.points.iter().find(|(d, _)| *d == third)?;
+        let a = self.points.iter().find(|c| c.range == rounded)?;
+        let b = self.points.iter().find(|c| c.range == next)?;
+        let c = self.points.iter().find(|c| c.range == third)?;
         let points = [a, b, c];
         let mut sum = 0.0;
         for i in 0..3 {
@@ -355,12 +364,24 @@ impl Lut {
                     continue;
                 }
 
-                prod *= (distance.0 as f64 - points[j].0 as f64) / (points[i].0 as f64 - points[j].0 as f64);
+                prod *= (distance.0 as f64 - points[j].range as f64) / (points[i].range as f64 - points[j].range as f64);
                 
             }
-            sum += prod * points[i].1 as f64;
+            sum += prod * points[i].elevation as f64;
         }
         Some(sum)
+    }
+
+    fn time_of_flight(&self, distance: Distance) -> Option<f64> {
+        let rounded = (distance.0 / self.range_inc) * self.range_inc;
+        let rem = distance.0 % self.range_inc;
+        let next = rounded + self.range_inc;
+        let low = self.points.iter().find(|c| c.range == rounded)?;
+        let high = self.points.iter().find(|c| c.range == next)?;
+        let meters = high.range - low.range;
+        let seconds = low.time_of_flight - high.time_of_flight;
+        let seconds_per_meter = seconds / meters as f64;
+        Some(low.time_of_flight - (rem as f64 * seconds_per_meter))
     }
 }
 
@@ -420,7 +441,7 @@ impl Charge {
                 c: 1065.0,
             },
             Charge::Four => Quadratic {
-                a: -0.0000601618,
+                a: -6.01618E-05,
                 b: 0.206291,
                 c: 1133.45796,
             },
