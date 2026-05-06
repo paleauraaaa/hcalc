@@ -11,4 +11,4 @@
 `coords` may be comma-separated, space-separated, or both, and may optionally be parenthesized. That is, `500 1000`, `500,1000`, `500, 1000`, `(500 1000)`, `(500,1000)`, and `(500, 1000)` would all be valid coords.
 
 # Build
-Pre-compiled binaries for Windows and Linux are provided, but `hcalc` should build for any target with a working `std` environment with a simple `cargo build`. I'd be happy to provide pre-compiled macos executables too, but alas, I do not own an Apple device.
+Pre-compiled binaries for Windows and Linux are provided, but `hcalc` should build for any target with a working `std` environment with a simple `cargo build`. I'd be happy to provide pre-compiled macOS executables too, but alas, I do not own an Apple device.
