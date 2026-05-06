@@ -239,92 +239,400 @@ struct ChargeInfo {
 }
 
 static CHARGE_1_LUT: [ChargeInfo; 12] = [
-    ChargeInfo { range: 950, elevation: 1245, time_of_flight: 24.4 },
-    ChargeInfo { range: 1000, elevation: 1221, time_of_flight: 24.2 },
-    ChargeInfo { range: 1050, elevation: 1197, time_of_flight: 24.0 },
-    ChargeInfo { range: 1100, elevation: 1171, time_of_flight: 23.7 },
-    ChargeInfo { range: 1150, elevation: 1149, time_of_flight: 23.4 },
-    ChargeInfo { range: 1200, elevation: 1115, time_of_flight: 23.1 },
-    ChargeInfo { range: 1250, elevation: 1084, time_of_flight: 22.7 },
-    ChargeInfo { range: 1300, elevation: 1050, time_of_flight: 22.3 },
-    ChargeInfo { range: 1350, elevation: 1011, time_of_flight: 21.8 },
-    ChargeInfo { range: 1400, elevation: 965, time_of_flight: 21.2 },
-    ChargeInfo { range: 1450, elevation: 907, time_of_flight: 20.3 },
-    ChargeInfo { range: 1500, elevation: 800, time_of_flight: 18.6 },
+    ChargeInfo {
+        range: 950,
+        elevation: 1245,
+        time_of_flight: 24.4,
+    },
+    ChargeInfo {
+        range: 1000,
+        elevation: 1221,
+        time_of_flight: 24.2,
+    },
+    ChargeInfo {
+        range: 1050,
+        elevation: 1197,
+        time_of_flight: 24.0,
+    },
+    ChargeInfo {
+        range: 1100,
+        elevation: 1171,
+        time_of_flight: 23.7,
+    },
+    ChargeInfo {
+        range: 1150,
+        elevation: 1149,
+        time_of_flight: 23.4,
+    },
+    ChargeInfo {
+        range: 1200,
+        elevation: 1115,
+        time_of_flight: 23.1,
+    },
+    ChargeInfo {
+        range: 1250,
+        elevation: 1084,
+        time_of_flight: 22.7,
+    },
+    ChargeInfo {
+        range: 1300,
+        elevation: 1050,
+        time_of_flight: 22.3,
+    },
+    ChargeInfo {
+        range: 1350,
+        elevation: 1011,
+        time_of_flight: 21.8,
+    },
+    ChargeInfo {
+        range: 1400,
+        elevation: 965,
+        time_of_flight: 21.2,
+    },
+    ChargeInfo {
+        range: 1450,
+        elevation: 907,
+        time_of_flight: 20.3,
+    },
+    ChargeInfo {
+        range: 1500,
+        elevation: 800,
+        time_of_flight: 18.6,
+    },
 ];
 
 static CHARGE_2_LUT: [ChargeInfo; 21] = [
-    ChargeInfo { range: 1500, elevation: 1270, time_of_flight: 31.1 },
-    ChargeInfo { range: 1550, elevation: 1257, time_of_flight: 33.0 },
-    ChargeInfo { range: 1600, elevation: 1243, time_of_flight: 32.9 },
-    ChargeInfo { range: 1650, elevation: 1229, time_of_flight: 32.7 },
-    ChargeInfo { range: 1700, elevation: 1214, time_of_flight: 32.5 },
-    ChargeInfo { range: 1750, elevation: 1200, time_of_flight: 32.4 },
-    ChargeInfo { range: 1800, elevation: 1185, time_of_flight: 32.1 },
-    ChargeInfo { range: 1850, elevation: 1169, time_of_flight: 31.9 },
-    ChargeInfo { range: 1900, elevation: 1153, time_of_flight: 31.7 },
-    ChargeInfo { range: 1950, elevation: 1136, time_of_flight: 31.5 },
-    ChargeInfo { range: 2000, elevation: 1119, time_of_flight: 31.2 },
-    ChargeInfo { range: 2050, elevation: 1101, time_of_flight: 31.0 },
-    ChargeInfo { range: 2100, elevation: 1082, time_of_flight: 30.7 },
-    ChargeInfo { range: 2150, elevation: 1062, time_of_flight: 30.3 },
-    ChargeInfo { range: 2200, elevation: 1041, time_of_flight: 30.0 },
-    ChargeInfo { range: 2250, elevation: 1018, time_of_flight: 29.6 },
-    ChargeInfo { range: 2300, elevation: 995, time_of_flight: 29.2 },
-    ChargeInfo { range: 2350, elevation: 967, time_of_flight: 28.7 },
-    ChargeInfo { range: 2400, elevation: 938, time_of_flight: 28.1 },
-    ChargeInfo { range: 2450, elevation: 904, time_of_flight: 27.5 },
-    ChargeInfo { range: 2500, elevation: 860, time_of_flight: 26.5 },
+    ChargeInfo {
+        range: 1500,
+        elevation: 1270,
+        time_of_flight: 31.1,
+    },
+    ChargeInfo {
+        range: 1550,
+        elevation: 1257,
+        time_of_flight: 33.0,
+    },
+    ChargeInfo {
+        range: 1600,
+        elevation: 1243,
+        time_of_flight: 32.9,
+    },
+    ChargeInfo {
+        range: 1650,
+        elevation: 1229,
+        time_of_flight: 32.7,
+    },
+    ChargeInfo {
+        range: 1700,
+        elevation: 1214,
+        time_of_flight: 32.5,
+    },
+    ChargeInfo {
+        range: 1750,
+        elevation: 1200,
+        time_of_flight: 32.4,
+    },
+    ChargeInfo {
+        range: 1800,
+        elevation: 1185,
+        time_of_flight: 32.1,
+    },
+    ChargeInfo {
+        range: 1850,
+        elevation: 1169,
+        time_of_flight: 31.9,
+    },
+    ChargeInfo {
+        range: 1900,
+        elevation: 1153,
+        time_of_flight: 31.7,
+    },
+    ChargeInfo {
+        range: 1950,
+        elevation: 1136,
+        time_of_flight: 31.5,
+    },
+    ChargeInfo {
+        range: 2000,
+        elevation: 1119,
+        time_of_flight: 31.2,
+    },
+    ChargeInfo {
+        range: 2050,
+        elevation: 1101,
+        time_of_flight: 31.0,
+    },
+    ChargeInfo {
+        range: 2100,
+        elevation: 1082,
+        time_of_flight: 30.7,
+    },
+    ChargeInfo {
+        range: 2150,
+        elevation: 1062,
+        time_of_flight: 30.3,
+    },
+    ChargeInfo {
+        range: 2200,
+        elevation: 1041,
+        time_of_flight: 30.0,
+    },
+    ChargeInfo {
+        range: 2250,
+        elevation: 1018,
+        time_of_flight: 29.6,
+    },
+    ChargeInfo {
+        range: 2300,
+        elevation: 995,
+        time_of_flight: 29.2,
+    },
+    ChargeInfo {
+        range: 2350,
+        elevation: 967,
+        time_of_flight: 28.7,
+    },
+    ChargeInfo {
+        range: 2400,
+        elevation: 938,
+        time_of_flight: 28.1,
+    },
+    ChargeInfo {
+        range: 2450,
+        elevation: 904,
+        time_of_flight: 27.5,
+    },
+    ChargeInfo {
+        range: 2500,
+        elevation: 860,
+        time_of_flight: 26.5,
+    },
 ];
 
 static CHARGE_4_LUT: [ChargeInfo; 20] = [
-    ChargeInfo { range: 2600, elevation: 1271, time_of_flight: 47.2 },
-    ChargeInfo { range: 2700, elevation: 1255, time_of_flight: 47.0 },
-    ChargeInfo { range: 2800, elevation: 1240, time_of_flight: 46.7 },
-    ChargeInfo { range: 2900, elevation: 1224, time_of_flight: 46.5 },
-    ChargeInfo { range: 3000, elevation: 1207, time_of_flight: 46.2 },
-    ChargeInfo { range: 3100, elevation: 1190, time_of_flight: 45.9 },
-    ChargeInfo { range: 3200, elevation: 1172, time_of_flight: 45.6 },
-    ChargeInfo { range: 3300, elevation: 1154, time_of_flight: 45.2 },
-    ChargeInfo { range: 3400, elevation: 1135, time_of_flight: 44.9 },
-    ChargeInfo { range: 3500, elevation: 1116, time_of_flight: 44.5 },
-    ChargeInfo { range: 3600, elevation: 1095, time_of_flight: 44.0 },
-    ChargeInfo { range: 3700, elevation: 1074, time_of_flight: 43.6 },
-    ChargeInfo { range: 3800, elevation: 1052, time_of_flight: 43.1 },
-    ChargeInfo { range: 3900, elevation: 1028, time_of_flight: 42.5 },
-    ChargeInfo { range: 4000, elevation: 1003, time_of_flight: 41.9 },
-    ChargeInfo { range: 4100, elevation: 976, time_of_flight: 41.3 },
-    ChargeInfo { range: 4200, elevation: 946, time_of_flight: 40.5 },
-    ChargeInfo { range: 4300, elevation: 912, time_of_flight: 39.6 },
-    ChargeInfo { range: 4400, elevation: 874, time_of_flight: 38.5 },
-    ChargeInfo { range: 4500, elevation: 828, time_of_flight: 37.2 },
+    ChargeInfo {
+        range: 2600,
+        elevation: 1271,
+        time_of_flight: 47.2,
+    },
+    ChargeInfo {
+        range: 2700,
+        elevation: 1255,
+        time_of_flight: 47.0,
+    },
+    ChargeInfo {
+        range: 2800,
+        elevation: 1240,
+        time_of_flight: 46.7,
+    },
+    ChargeInfo {
+        range: 2900,
+        elevation: 1224,
+        time_of_flight: 46.5,
+    },
+    ChargeInfo {
+        range: 3000,
+        elevation: 1207,
+        time_of_flight: 46.2,
+    },
+    ChargeInfo {
+        range: 3100,
+        elevation: 1190,
+        time_of_flight: 45.9,
+    },
+    ChargeInfo {
+        range: 3200,
+        elevation: 1172,
+        time_of_flight: 45.6,
+    },
+    ChargeInfo {
+        range: 3300,
+        elevation: 1154,
+        time_of_flight: 45.2,
+    },
+    ChargeInfo {
+        range: 3400,
+        elevation: 1135,
+        time_of_flight: 44.9,
+    },
+    ChargeInfo {
+        range: 3500,
+        elevation: 1116,
+        time_of_flight: 44.5,
+    },
+    ChargeInfo {
+        range: 3600,
+        elevation: 1095,
+        time_of_flight: 44.0,
+    },
+    ChargeInfo {
+        range: 3700,
+        elevation: 1074,
+        time_of_flight: 43.6,
+    },
+    ChargeInfo {
+        range: 3800,
+        elevation: 1052,
+        time_of_flight: 43.1,
+    },
+    ChargeInfo {
+        range: 3900,
+        elevation: 1028,
+        time_of_flight: 42.5,
+    },
+    ChargeInfo {
+        range: 4000,
+        elevation: 1003,
+        time_of_flight: 41.9,
+    },
+    ChargeInfo {
+        range: 4100,
+        elevation: 976,
+        time_of_flight: 41.3,
+    },
+    ChargeInfo {
+        range: 4200,
+        elevation: 946,
+        time_of_flight: 40.5,
+    },
+    ChargeInfo {
+        range: 4300,
+        elevation: 912,
+        time_of_flight: 39.6,
+    },
+    ChargeInfo {
+        range: 4400,
+        elevation: 874,
+        time_of_flight: 38.5,
+    },
+    ChargeInfo {
+        range: 4500,
+        elevation: 828,
+        time_of_flight: 37.2,
+    },
 ];
 
 static CHARGE_5_LUT: [ChargeInfo; 24] = [
-    ChargeInfo { range: 3000, elevation: 1271, time_of_flight: 0.0 },
-    ChargeInfo { range: 3100, elevation: 1258, time_of_flight: 0.0 },
-    ChargeInfo { range: 3200, elevation: 1244, time_of_flight: 0.0 },
-    ChargeInfo { range: 3300, elevation: 1230, time_of_flight: 0.0 },
-    ChargeInfo { range: 3400, elevation: 1216, time_of_flight: 0.0 },
-    ChargeInfo { range: 3500, elevation: 1202, time_of_flight: 0.0 },
-    ChargeInfo { range: 3600, elevation: 1187, time_of_flight: 0.0 },
-    ChargeInfo { range: 3700, elevation: 1172, time_of_flight: 0.0 },
-    ChargeInfo { range: 3800, elevation: 1156, time_of_flight: 0.0 },
-    ChargeInfo { range: 3900, elevation: 1140, time_of_flight: 0.0 },
-    ChargeInfo { range: 4000, elevation: 1024, time_of_flight: 0.0 },
-    ChargeInfo { range: 4100, elevation: 1107, time_of_flight: 0.0 },
-    ChargeInfo { range: 4200, elevation: 1089, time_of_flight: 0.0 },
-    ChargeInfo { range: 4300, elevation: 1071, time_of_flight: 0.0 },
-    ChargeInfo { range: 4400, elevation: 1052, time_of_flight: 0.0 },
-    ChargeInfo { range: 4500, elevation: 1032, time_of_flight: 0.0 },
-    ChargeInfo { range: 4600, elevation: 1011, time_of_flight: 0.0 },
-    ChargeInfo { range: 4700, elevation: 989, time_of_flight: 0.0 },
-    ChargeInfo { range: 4800, elevation: 966, time_of_flight: 0.0 },
-    ChargeInfo { range: 4900, elevation: 941, time_of_flight: 0.0 },
-    ChargeInfo { range: 5000, elevation: 913, time_of_flight: 0.0 },
-    ChargeInfo { range: 5100, elevation: 883, time_of_flight: 0.0 },
-    ChargeInfo { range: 5200, elevation: 850, time_of_flight: 0.0 },
-    ChargeInfo { range: 5300, elevation: 809, time_of_flight: 0.0 },
+    ChargeInfo {
+        range: 3000,
+        elevation: 1271,
+        time_of_flight: 0.0,
+    },
+    ChargeInfo {
+        range: 3100,
+        elevation: 1258,
+        time_of_flight: 0.0,
+    },
+    ChargeInfo {
+        range: 3200,
+        elevation: 1244,
+        time_of_flight: 0.0,
+    },
+    ChargeInfo {
+        range: 3300,
+        elevation: 1230,
+        time_of_flight: 0.0,
+    },
+    ChargeInfo {
+        range: 3400,
+        elevation: 1216,
+        time_of_flight: 0.0,
+    },
+    ChargeInfo {
+        range: 3500,
+        elevation: 1202,
+        time_of_flight: 0.0,
+    },
+    ChargeInfo {
+        range: 3600,
+        elevation: 1187,
+        time_of_flight: 0.0,
+    },
+    ChargeInfo {
+        range: 3700,
+        elevation: 1172,
+        time_of_flight: 0.0,
+    },
+    ChargeInfo {
+        range: 3800,
+        elevation: 1156,
+        time_of_flight: 0.0,
+    },
+    ChargeInfo {
+        range: 3900,
+        elevation: 1140,
+        time_of_flight: 0.0,
+    },
+    ChargeInfo {
+        range: 4000,
+        elevation: 1024,
+        time_of_flight: 0.0,
+    },
+    ChargeInfo {
+        range: 4100,
+        elevation: 1107,
+        time_of_flight: 0.0,
+    },
+    ChargeInfo {
+        range: 4200,
+        elevation: 1089,
+        time_of_flight: 0.0,
+    },
+    ChargeInfo {
+        range: 4300,
+        elevation: 1071,
+        time_of_flight: 0.0,
+    },
+    ChargeInfo {
+        range: 4400,
+        elevation: 1052,
+        time_of_flight: 0.0,
+    },
+    ChargeInfo {
+        range: 4500,
+        elevation: 1032,
+        time_of_flight: 0.0,
+    },
+    ChargeInfo {
+        range: 4600,
+        elevation: 1011,
+        time_of_flight: 0.0,
+    },
+    ChargeInfo {
+        range: 4700,
+        elevation: 989,
+        time_of_flight: 0.0,
+    },
+    ChargeInfo {
+        range: 4800,
+        elevation: 966,
+        time_of_flight: 0.0,
+    },
+    ChargeInfo {
+        range: 4900,
+        elevation: 941,
+        time_of_flight: 0.0,
+    },
+    ChargeInfo {
+        range: 5000,
+        elevation: 913,
+        time_of_flight: 0.0,
+    },
+    ChargeInfo {
+        range: 5100,
+        elevation: 883,
+        time_of_flight: 0.0,
+    },
+    ChargeInfo {
+        range: 5200,
+        elevation: 850,
+        time_of_flight: 0.0,
+    },
+    ChargeInfo {
+        range: 5300,
+        elevation: 809,
+        time_of_flight: 0.0,
+    },
 ];
 
 struct Lut {
@@ -351,7 +659,11 @@ impl Lut {
         let next = rounded + self.range_inc;
         let next2 = rounded + self.range_inc * 2;
         let prev = rounded - self.range_inc;
-        let third = if rem > self.range_inc / 2 { next2 } else { prev };
+        let third = if rem > self.range_inc / 2 {
+            next2
+        } else {
+            prev
+        };
         let a = self.points.iter().find(|c| c.range == rounded)?;
         let b = self.points.iter().find(|c| c.range == next)?;
         let c = self.points.iter().find(|c| c.range == third)?;
@@ -364,8 +676,8 @@ impl Lut {
                     continue;
                 }
 
-                prod *= (distance.0 as f64 - points[j].range as f64) / (points[i].range as f64 - points[j].range as f64);
-                
+                prod *= (distance.0 as f64 - points[j].range as f64)
+                    / (points[i].range as f64 - points[j].range as f64);
             }
             sum += prod * points[i].elevation as f64;
         }
@@ -455,11 +767,23 @@ impl Charge {
 
     const fn lut(&self) -> Lut {
         match self {
-            Charge::One => Lut { points: &CHARGE_1_LUT, range_inc: 50 },
-            Charge::Two => Lut { points: &CHARGE_2_LUT, range_inc: 50 },
+            Charge::One => Lut {
+                points: &CHARGE_1_LUT,
+                range_inc: 50,
+            },
+            Charge::Two => Lut {
+                points: &CHARGE_2_LUT,
+                range_inc: 50,
+            },
             Charge::Three => unimplemented!(),
-            Charge::Four => Lut { points: &CHARGE_4_LUT, range_inc: 100 },
-            Charge::Five => Lut { points: &CHARGE_5_LUT, range_inc: 100 },
+            Charge::Four => Lut {
+                points: &CHARGE_4_LUT,
+                range_inc: 100,
+            },
+            Charge::Five => Lut {
+                points: &CHARGE_5_LUT,
+                range_inc: 100,
+            },
         }
     }
 }
@@ -510,7 +834,10 @@ fn session() -> Result<bool, ()> {
                 return Ok(true);
             }
             "quit" | "q" => return Ok(false),
-            _ => eprintln!("Unknown command: {}\nValid commands: new, delete, edit, add, list, reset, quit", cmd),
+            _ => eprintln!(
+                "Unknown command: {}\nValid commands: new, delete, edit, add, list, reset, quit",
+                cmd
+            ),
         };
         input.clear();
     }
