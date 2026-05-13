@@ -834,6 +834,17 @@ fn session() -> Result<bool, ()> {
                 return Ok(true);
             }
             "quit" | "q" => return Ok(false),
+            "help" | "h" => {
+                println!("Commands:");
+                println!("\tn[ew] <name> <coords>: Create a new fire mission with the given name and coordinates.");
+                println!("\td[elete] <name>: Delete the fire mission with the given name.");
+                println!("\te[dit] <name> <coords>: Edit the fire mission with the given name to have the new coordinates.");
+                println!("\ta[dd] <name> <coords>: Add a firing position with the given name and coordinates.");
+                println!("\tl[ist]: List all fire missions and firing positions.");
+                println!("\tr[eset]: Clear all fire missions and firing positions.");
+                println!("\tq[uit]: Exit the program.");
+                println!("\th[elp]: Show this help message.");
+            }
             _ => eprintln!(
                 "Unknown command: {}\nValid commands: new, delete, edit, add, list, reset, quit",
                 cmd
